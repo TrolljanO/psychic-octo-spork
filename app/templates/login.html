@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" class="main-login">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Login</title>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='img/background-1.jpg') }}" alt="background-image" class="background-image" />
+    <section class="login-container">
+        <div class="login-form-wrapper">
+            <header class="header-image-container">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Company logo" class="header-image" />
+            </header>
+            <form class="login-form" action="{{ url_for('auth.login_post') }}" method="post">
+                <div class="form-fields">
+                    <div class="input-group">
+                        <label for="email" class="input-label">Login</label>
+                        <input type="email" id="email" name="email" class="form-input" aria-label="Login" required />
+                    </div>
+                    <div class="password-group">
+                        <label for="password-input" class="input-label">Senha</label>
+                        <input type="password" id="password-input" name="password" class="password-input" aria-label="Senha" required />
+                    </div>
+                </div>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <button type="submit" class="submit-button">Entrar</button>
+            </form>
+        </div>
+        <div class="signup-container">
+            <span class="signup-text">Não tem conta?</span>
+            <a href="{{ url_for('auth.signup') }}" class="signup-link">Inscrever-se</a>
+        </div>
+    </section>
+</body>
+</html>

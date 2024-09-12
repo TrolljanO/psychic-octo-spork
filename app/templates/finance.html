@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Financeiro{% endblock %}
+
+{% block content %}
+<div class="user-profile d-flex justify-content-end">
+    <img src="{{ url_for('static', filename='uploads/' ~ (current_user.profile_pic or 'default_profile.png')) }}" id="profile-img" alt="Perfil" class="profile-pic" width="50" height="50">
+    <div class="dropdown-menu">
+        <a href="{{ url_for('main.profile') }}">Perfil</a>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    </div>
+</div>
+<h2 class="title2">Gestão Financeira</h2>
+<br>
+<div class="card mb-4" id="addCredits">
+    <div class="card-header">Adicionar Créditos</div>
+    <div class="card-body">
+        <br>
+        <form id="recharge-form" method="POST" action="{{ url_for('main.finance') }}">
+            <div class="form-group">
+                <label for="amount">Valor (R$):</label>
+                <br>
+                <input type="text" id="amount" name="amount" size="2" class="form-control" required>
+            </div>
+            <button type="submit" id="recharge-btn" class="btn btn-primary">Recarregar Créditos</button>
+        </form>
+        <img id="qr-code" style="display:none; width: 350px; height: 350px;" alt="QR Code">
+        <p id="payment-status"></p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Histórico de Transações</div>
+    <br>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Quantia</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.timestamp }}</td>
+                        <td>{{ transaction.description }}</td>
+                        <td>{{ transaction.formatted_amount() }}</td>
+                        <td>{{ transaction.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

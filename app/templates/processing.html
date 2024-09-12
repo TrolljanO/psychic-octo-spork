@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Links em Processamento - Limpa Pasta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleDarkMode()">&#9788;</button>
+    <div class="wrapper d-flex align-items-stretch">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="p-4">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="img-fluid mb-4">
+                <ul class="list-unstyled components mb-5">
+                    <li>
+                        <a href="{{ url_for('main.index') }}">Início</a>
+                    </li>
+                    <li class="active">
+                        <a href="{{ url_for('main.processing') }}">Links em Processamento</a>
+                    </li>
+                    {% if current_user.is_admin %}
+                    <li>
+                        <a href="{{ url_for('main.finance') }}">Financeiro</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content" class="p-4 p-md-5">
+            <div class="user-profile d-flex justify-content-end">
+                <img src="{{ url_for('static', filename='uploads/' ~ current_user.profile_pic) }}" alt="Perfil" class="profile-pic">
+                <div class="dropdown-menu">
+                    <a href="{{ url_for('main.profile') }}">Perfil</a>
+                    <a href="{{ url_for('auth.logout') }}">Logout</a>
+                </div>
+            </div>
+
+            <h2>Logs de Upload</h2>
+            <div class="card mb-4">
+                <div class="card-header">Arquivos Enviados</div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Nome do Arquivo</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                <tr>
+                                    <td>{{ log.upload_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                    <td>{{ log.filename }}</td>
+                                    <td>{{ log.status }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Links em Processamento</h2>
+            <div class="card">
+                <div class="card-header">Links Enviados</div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Link</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for file in files %}
+                                <tr>
+                                    <td>{{ file.timestamp }}</td>
+                                    <td>{{ file.link }}</td>
+                                    <td>{{ file.status }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app/static/js/scripts.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+</body>
+</html>

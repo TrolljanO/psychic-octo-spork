@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}Página Inicial{% endblock %}
+{% block content %}
+<!-- Exibir mensagens de flash -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container mt-3 custom-container">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+
+<section class="container custom-container">
+    <section class="upload-section">
+        <header class="section-header">Upload de Arquivo ZIP</header>
+        <div class="upload-form-container">
+            <form class="upload-form" action="{{ url_for('main.upload_file') }}" method="post" enctype="multipart/form-data">
+                <div class="file-input-wrapper">
+                    <label for="fileUpload" class="file-input-label">Escolher Arquivo</label>
+                    <div class="file-input">
+                        <span class="file-choose-btn">Escolher arquivo</span>
+                        <span class="file-name">Nenhum arquivo escolhido</span>
+                    </div>
+                    <input type="file" id="fileUpload" name="file" class="visually-hidden" aria-label="Escolher Arquivo">
+                </div>
+                <button type="submit" class="submit-btn">Enviar</button>
+            </form>
+            <div class="overlay" aria-hidden="true"></div>
+        </div>
+    </section>
+
+    <section class="processing-section">
+        <header class="processing-header">Arquivos em Processamento</header>
+        <div class="processing-content">
+            <div class="table-wrapper">
+                <table class="processing-table">
+                    <thead class="table-header">
+                        <tr class="header-row">
+                            <th class="header-cell">Nome do Arquivo</th>
+                            <th class="header-cell">Status</th>
+                            <th class="header-cell">Data de Upload</th>
+                            <th class="header-cell">Link de Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for file in files_in_process %}
+                        <tr class="body-row">
+                            <td class="body-cell">{{ file.filename }}</td>
+                            <td class="body-cell">{{ file.status }}</td>
+                            <td class="body-cell">{{ file.upload_date }}</td>
+                            <td class="body-cell">
+                                {% if file.status == 'Aguardando Pagamento' %}
+                                    <button class="btn btn-warning" onclick="showPixModal({{ file.id }}, {{ file.cost }})">Gerar PIX</button>
+                                {% else %}
+                                    {{ file.status }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</section>
+
+<!--&lt;!&ndash; Container principal para conteúdo da página inicial &ndash;&gt;-->
+<!--<div class="container mt-5">-->
+<!--    &lt;!&ndash; Card para Upload de Arquivo &ndash;&gt;-->
+<!--    <div class="card mb-4">-->
+<!--        <div class="card-header">-->
+<!--            Upload de Arquivo ZIP-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--            <form id="uploadForm" action="{{ url_for('main.upload_file') }}" method="post" enctype="multipart/form-data">-->
+<!--                <div class="form-group">-->
+<!--                    <label for="file">Escolher Arquivo</label>-->
+<!--                    <input type="file" class="form-control" id="file" name="file" accept=".zip, .rar, .RAR, .ZIP" required>-->
+<!--                </div>-->
+<!--                <button type="submit" class="btn btn-primary mt-3">Enviar</button>-->
+<!--                <div class="progress mt-3">-->
+<!--                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Card para visualizar o histórico de uploads &ndash;&gt;-->
+<!--    <div class="card">-->
+<!--        <div class="card-header">-->
+<!--            Arquivos em Processamento-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--            <div class="table-responsive">-->
+<!--                <table class="table table-bordered table-striped">-->
+<!--                    <thead class="thead-light">-->
+<!--                        <tr>-->
+<!--                            <th scope="col">Nome do Arquivo</th>-->
+<!--                            <th scope="col">Status</th>-->
+<!--                            <th scope="col">Data de Upload</th>-->
+<!--                            <th scope="col">Link de Download</th>-->
+<!--                        </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                        {% for file in files_in_process %}-->
+<!--                        <tr>-->
+<!--                            <td>{{ file.filename }}</td>-->
+<!--                            <td>{{ file.status }}</td>-->
+<!--                            <td>{{ file.upload_date }}</td>-->
+<!--                            <td>-->
+<!--                                {% if file.status == 'Aguardando Pagamento' %}-->
+<!--                                    <button class="btn btn-warning" onclick="showPixModal({{ file.id }}, {{ file.cost }})">Gerar PIX</button>-->
+<!--                                {% else %}-->
+<!--                                    {{ file.status }}-->
+<!--                                {% endif %}-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        {% endfor %}-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!-- Modal -->
+<div class="modal fade" id="pixModal" tabindex="-1" role="dialog" aria-labelledby="pixModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pixModalLabel">Gerar PIX</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modalPixAmount"></p>
+                <p id="qrCodeMessage"></p>
+                <img id="qrCodeImage" src="" alt="QR Code" style="max-width: 100%; height: auto; display: none;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmPixBtn">Confirmar</button>
+                <button type="button" class="btn btn-secondary" id="cancelPixBtn" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

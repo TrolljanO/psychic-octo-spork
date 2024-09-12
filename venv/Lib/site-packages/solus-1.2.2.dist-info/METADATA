@@ -1,0 +1,182 @@
+Metadata-Version: 2.1
+Name: solus
+Version: 1.2.2
+Summary: Singleton types.
+Home-page: https://github.com/nekitdev/solus
+License: MIT
+Keywords: python,singleton
+Author: nekitdev
+Requires-Python: >=3.8
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Utilities
+Classifier: Typing :: Typed
+Requires-Dist: named (>=1.4.1)
+Project-URL: Chat, https://nekit.dev/chat
+Project-URL: Documentation, https://nekitdev.github.io/solus
+Project-URL: Funding, https://nekit.dev/funding
+Project-URL: Issues, https://github.com/nekitdev/solus/issues
+Project-URL: Repository, https://github.com/nekitdev/solus
+Description-Content-Type: text/markdown
+
+# `solus`
+
+[![License][License Badge]][License]
+[![Version][Version Badge]][Package]
+[![Downloads][Downloads Badge]][Package]
+[![Discord][Discord Badge]][Discord]
+
+[![Documentation][Documentation Badge]][Documentation]
+[![Check][Check Badge]][Actions]
+[![Test][Test Badge]][Actions]
+[![Coverage][Coverage Badge]][Coverage]
+
+> *Singleton types.*
+
+## Installing
+
+**Python 3.8 or above is required.**
+
+### pip
+
+Installing the library with `pip` is quite simple:
+
+```console
+$ pip install solus
+```
+
+Alternatively, the library can be installed from source:
+
+```console
+$ git clone https://github.com/nekitdev/solus.git
+$ cd solus
+$ python -m pip install .
+```
+
+### poetry
+
+You can add `solus` as a dependency with the following command:
+
+```console
+$ poetry add solus
+```
+
+Or by directly specifying it in the configuration like so:
+
+```toml
+[tool.poetry.dependencies]
+solus = "^1.2.2"
+```
+
+Alternatively, you can add it directly from the source:
+
+```toml
+[tool.poetry.dependencies.solus]
+git = "https://github.com/nekitdev/solus.git"
+```
+
+## Examples
+
+### Default
+
+[`Singleton`][solus.core.Singleton] type is used to create *thread-safe* singletons.
+
+```python
+from solus import Singleton
+
+
+class Null(Singleton):
+    ...
+```
+
+Somewhere else in the code:
+
+```python
+null = Null()  # instantiate
+```
+
+### Unsafe
+
+[`UnsafeSingleton`][solus.core.UnsafeSingleton] type is used to create *thread-unsafe* singletons.
+
+```python
+from solus import UnsafeSingleton
+
+
+class Null(UnsafeSingleton):
+    ...
+
+
+null = Null()  # instantiate right away
+```
+
+### Warning
+
+!!! warning
+
+    It is highly recommended to instantiate unsafe singleton types right after their creation!
+
+## Documentation
+
+You can find the documentation [here][Documentation].
+
+## Support
+
+If you need support with the library, you can send an [email][Email]
+or refer to the official [Discord server][Discord].
+
+## Changelog
+
+You can find the changelog [here][Changelog].
+
+## Security Policy
+
+You can find the Security Policy of `solus` [here][Security].
+
+## Contributing
+
+If you are interested in contributing to `solus`, make sure to take a look at the
+[Contributing Guide][Contributing Guide], as well as the [Code of Conduct][Code of Conduct].
+
+## License
+
+`solus` is licensed under the MIT License terms. See [License][License] for details.
+
+[Email]: mailto:support@nekit.dev
+
+[Discord]: https://nekit.dev/chat
+
+[Actions]: https://github.com/nekitdev/solus/actions
+
+[Changelog]: https://github.com/nekitdev/solus/blob/main/CHANGELOG.md
+[Code of Conduct]: https://github.com/nekitdev/solus/blob/main/CODE_OF_CONDUCT.md
+[Contributing Guide]: https://github.com/nekitdev/solus/blob/main/CONTRIBUTING.md
+[Security]: https://github.com/nekitdev/solus/blob/main/SECURITY.md
+
+[License]: https://github.com/nekitdev/solus/blob/main/LICENSE
+
+[Package]: https://pypi.org/project/solus
+[Coverage]: https://codecov.io/gh/nekitdev/solus
+[Documentation]: https://nekitdev.github.io/solus
+
+[Discord Badge]: https://img.shields.io/discord/728012506899021874
+[License Badge]: https://img.shields.io/pypi/l/solus
+[Version Badge]: https://img.shields.io/pypi/v/solus
+[Downloads Badge]: https://img.shields.io/pypi/dm/solus
+
+[Documentation Badge]: https://github.com/nekitdev/solus/workflows/docs/badge.svg
+[Check Badge]: https://github.com/nekitdev/solus/workflows/check/badge.svg
+[Test Badge]: https://github.com/nekitdev/solus/workflows/test/badge.svg
+[Coverage Badge]: https://codecov.io/gh/nekitdev/solus/branch/main/graph/badge.svg
+
+[solus.core.Singleton]: https://nekitdev.github.io/solus/reference#solus.Singleton
+[solus.core.UnsafeSingleton]: https://nekitdev.github.io/solus/reference#solus.UnsafeSingleton
+

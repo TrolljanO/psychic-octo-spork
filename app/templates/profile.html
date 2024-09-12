@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block content %}
+<div class="user-profile">
+    <h2>Perfil</h2>
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-header">Atualizar Perfil</div>
+        <div class="card-body">
+            <form action="{{ url_for('main.update_profile') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="profile_pic">Foto de Perfil</label>
+                    <input type="file" class="form-control-file" id="profile_pic" name="profile_pic">
+                </div>
+                <button type="submit" class="btn btn-primary">Atualizar Perfil</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
