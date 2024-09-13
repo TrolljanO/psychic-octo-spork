@@ -19,7 +19,7 @@ class User(UserMixin, db.Model):
     profile_pic = db.Column(db.String(255), nullable=True)
     transactions = db.relationship('Transaction', backref='user', lazy=True)
     files = db.relationship('File', backref='user', lazy=True)
-    services = db.relationship('Service', backref='user', lazy=True)  # Relacionamento com a nova tabela 'services'
+    services = db.relationship('Service', backref='user', lazy=True)
 
 # Tabela 'services' no schema 'site' para controlar quais serviços estão habilitados
 class Service(db.Model):
@@ -27,7 +27,7 @@ class Service(db.Model):
     __table_args__ = {'schema': 'site'}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('site.user.id'), nullable=False)  # FK para User
     limpa_nome = db.Column(db.Boolean, default=False)
     limpa_pasta = db.Column(db.Boolean, default=False)
     servico_3 = db.Column(db.Boolean, default=False)
@@ -40,8 +40,8 @@ class JobLimpaPasta(db.Model):
     __tablename__ = 'job_limpa_pasta'
     __table_args__ = {'schema': 'limpa_pasta'}
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    id_job = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('site.user.id'), nullable=False)  # FK para User
     link_arquivo = db.Column(db.String(255), nullable=False)
     novo_link = db.Column(db.String(255), nullable=True)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
@@ -53,7 +53,7 @@ class File(db.Model):
     __table_args__ = {'schema': 'limpa_pasta'}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('site.user.id'), nullable=False)  # FK para User
     filename = db.Column(db.String(255), nullable=False)
     status = db.Column(db.String(50), nullable=False, default='Iniciando')
     upload_date = db.Column(db.DateTime, default=datetime.utcnow)
@@ -72,14 +72,14 @@ class Transaction(db.Model):
     __table_args__ = {'schema': 'limpa_pasta'}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('site.user.id'), nullable=False)  # FK para User
+    file_id = db.Column(db.Integer, db.ForeignKey('limpa_pasta.file.id'), nullable=True)  # FK para File
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     description = db.Column(db.String(200), nullable=False)
     payment_type = db.Column(db.String(50), nullable=True)
     reference = db.Column(db.String(255), nullable=True)
     status = db.Column(db.String(50), nullable=False, default='Pendente')
     correlation_id = db.Column(db.String(255), nullable=False)
-    file_id = db.Column(db.Integer, nullable=True)
     timestamp = db.Column(db.DateTime, default=func.now())
 
     def formatted_amount(self):
@@ -92,8 +92,8 @@ class Vendedor(db.Model):
     __table_args__ = {'schema': 'limpa_nome'}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    afiliado_id = db.Column(db.Integer, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('site.user.id'), nullable=False)  # FK para User
+    afiliado_id = db.Column(db.Integer, db.ForeignKey('limpa_nome.vendedores.id'), nullable=True)  # FK para Vendedor (self-referencing)
     id_encadeado = db.Column(db.String(255), nullable=False)
     indicacoes = db.Column(db.Integer, default=0)
     vendas_fechadas = db.Column(db.Integer, default=0)
@@ -111,7 +111,7 @@ class Cliente(db.Model):
     __table_args__ = {'schema': 'limpa_nome'}
 
     id = db.Column(db.Integer, primary_key=True)
-    vendedor_id = db.Column(db.Integer, nullable=False)
+    vendedor_id = db.Column(db.Integer, db.ForeignKey('limpa_nome.vendedores.id'), nullable=False)  # FK para Vendedor
     nome = db.Column(db.String(255), nullable=False)
     valor_divida = db.Column(db.Numeric(10, 2))
     status_pagamento = db.Column(db.String(50), default='Aguardando pagamento')
@@ -131,8 +131,8 @@ class Venda(db.Model):
     __table_args__ = {'schema': 'limpa_nome'}
 
     id = db.Column(db.Integer, primary_key=True)
-    vendedor_id = db.Column(db.Integer, nullable=False)
-    cliente_id = db.Column(db.Integer, nullable=False)
+    vendedor_id = db.Column(db.Integer, db.ForeignKey('limpa_nome.vendedores.id'), nullable=False)  # FK para Vendedor
+    cliente_id = db.Column(db.Integer, db.ForeignKey('limpa_nome.clientes.id'), nullable=False)  # FK para Cliente
     valor_venda = db.Column(db.Numeric(10, 2), default=1500.00)
     status = db.Column(db.String(50), default='Aguardando Fechamento')
     data_venda = db.Column(db.Date)
@@ -144,13 +144,14 @@ class Venda(db.Model):
     data_cancelamento = db.Column(db.Date)
     motivo_cancelamento = db.Column(db.String(255))
     status_pagamento = db.Column(db.String(50), default='Pendente')
+    tipo_venda = db.Column(db.String(50), default='Não Informado')
 
 class Comissao(db.Model):
     __tablename__ = 'comissao'
     __table_args__ = {'schema': 'limpa_nome'}
 
     id = db.Column(db.Integer, primary_key=True)
-    vendedor_id = db.Column(db.Integer, nullable=False)
+    vendedor_id = db.Column(db.Integer, db.ForeignKey('limpa_nome.vendedores.id'), nullable=False)  # FK para Vendedor
     afiliado_id = db.Column(db.Integer, nullable=False)
     valor_comissao = db.Column(db.Numeric(10, 2), nullable=False)
     nivel = db.Column(db.Integer, nullable=False)

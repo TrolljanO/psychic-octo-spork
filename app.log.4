@@ -1,0 +1,98 @@
+2024-09-12 21:17:56,007 ERROR: Exception on / [GET] [in C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask\app.py:838]
+Traceback (most recent call last):
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask_login\utils.py", line 284, in decorated_view
+    elif not current_user.is_authenticated:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\werkzeug\local.py", line 318, in __get__
+    obj = instance._get_current_object()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\werkzeug\local.py", line 526, in _get_current_object
+    return get_name(local())
+                    ^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask_login\utils.py", line 25, in <lambda>
+    current_user = LocalProxy(lambda: _get_user())
+                                      ^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask_login\utils.py", line 370, in _get_user
+    current_app.login_manager._load_user()
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask_login\login_manager.py", line 347, in _load_user
+    raise Exception(
+Exception: Missing user_loader or request_loader. Refer to http://flask-login.readthedocs.io/#how-it-works for more info.
+2024-09-12 23:28:24,921 ERROR: Exception on /auth/signup [POST] [in C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask\app.py:838]
+Traceback (most recent call last):
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 2423, in _determine_joins
+    self.primaryjoin = join_condition(
+                       ^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\sql\util.py", line 123, in join_condition
+    return Join._join_condition(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\sql\selectable.py", line 1380, in _join_condition
+    raise exc.NoForeignKeysError(
+sqlalchemy.exc.NoForeignKeysError: Can't find any foreign key relationships between 'user' and 'transaction'.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask_cors\extension.py", line 194, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\PhpstormProjects\psychic-octo-spork\app\auth.py", line 42, in signup_post
+    user = User.query.filter_by(email=email).first()
+           ^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\flask_sqlalchemy\model.py", line 22, in __get__
+    return cls.query_class(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 275, in __init__
+    self._set_entities(entities)
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 288, in _set_entities
+    coercions.expect(
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\sql\coercions.py", line 389, in expect
+    insp._post_inspect
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 1253, in __get__
+    obj.__dict__[self.__name__] = result = self.fget(obj)
+                                           ^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2711, in _post_inspect
+    self._check_configure()
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2388, in _check_configure
+    _configure_registries({self.registry}, cascade=True)
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 4204, in _configure_registries
+    _do_configure_registries(registries, cascade)
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 4245, in _do_configure_registries
+    mapper._post_configure_properties()
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2405, in _post_configure_properties
+    prop.init()
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 584, in init
+    self.do_init()
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 1644, in do_init
+    self._setup_join_conditions()
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 1884, in _setup_join_conditions
+    self._join_condition = jc = JoinCondition(
+                                ^^^^^^^^^^^^^^
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 2310, in __init__
+    self._determine_joins()
+  File "C:\Users\T_J\Desktop\psychic-octo-spork\venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 2444, in _determine_joins
+    raise sa_exc.NoForeignKeysError(
+sqlalchemy.exc.NoForeignKeysError: Could not determine join condition between parent/child tables on relationship User.transactions - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.

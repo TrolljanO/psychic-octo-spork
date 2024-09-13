@@ -1,0 +1,42 @@
+{
+  "name": "vite-psychic",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vitest",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "@vue/test-utils": "^2.4.6",
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
+    "@vueuse/core": "^11.0.3",
+    "axios": "^0.21.4",
+    "dayjs": "^1.11.13",
+    "eslint": "^9.10.0",
+    "eslint-plugin-vue": "^9.28.0",
+    "lodash": "^4.17.21",
+    "pinia": "^2.2.2",
+    "sass": "^1.78.0",
+    "vue": "^3.2.31",
+    "vue-router": "^4.4.4",
+    "vuetify": "^3.7.0-beta.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/vue": "^8.1.0",
+    "@vitejs/plugin-vue": "^1.9.2",
+    "axios-mock-adapter": "^2.0.0",
+    "cypress": "^13.14.2",
+    "eslint-config-prettier": "^9.1.0",
+    "jsdom": "^25.0.0",
+    "msw": "^2.4.5",
+    "prettier": "^3.3.3",
+    "vite": "^2.6.4",
+    "vitest": "^2.1.0"
+  }
+}

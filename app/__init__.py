@@ -6,15 +6,15 @@ from config import Config
 import pymysql
 import logging
 from logging.handlers import RotatingFileHandler
+from flask_cors import CORS  # Importação do CORS
 from dotenv import load_dotenv
 import os
+from .models import db
 
 # Carregar variáveis de ambiente
 load_dotenv()
-# pymysql.install_as_MySQLdb()
 
 # Inicialização das extensões do Flask
-db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
 login.login_view = 'auth.login'
@@ -23,29 +23,39 @@ def create_app():
     # Criar a aplicação Flask
     app = Flask(__name__)
     app.config.from_object(Config)
+    db.init_app(app)
+    print(db)
 
     # Configuração do banco de dados
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ECHO'] = True
+    app.config["SQLALCHEMY_RECORD_QUERIES"] = True
+
+    # Configuração de CORS para permitir requisições de http://localhost:3001
+    CORS(app, resources={r"/*": {"origins": "http://localhost:3001"}}, methods=["GET", "POST", "OPTIONS"])
 
     # Inicializar as extensões
-    db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
 
-    # Registro dos Blueprints para diferentes serviços
     with app.app_context():
-        from app.routes import base_bp
-        from app.limpa_nome_routes import limpa_nome_bp
-        from app.limpa_pasta_routes import limpa_pasta_bp
-        from app.auth import auth  # Rotas de autenticação
+        # Registro dos Blueprints para diferentes serviços
+        from .routes import base_bp
+        from .limpa_nome_routes import limpa_nome_bp
+        from .limpa_pasta_routes import limpa_pasta_bp
+        from .auth import auth
+        from .models import User  # Certifique-se de importar User aqui
 
-        # Registro dos blueprints no app
-        app.register_blueprint(base_bp, url_prefix='/')  # Atualizado
+        app.register_blueprint(base_bp, url_prefix='/')
         app.register_blueprint(limpa_pasta_bp, url_prefix='/limpa_pasta')
         app.register_blueprint(limpa_nome_bp, url_prefix='/limpa_nome')
         app.register_blueprint(auth, url_prefix='/auth')
+
+        # Função user_loader para carregar o usuário a partir do ID
+        @login.user_loader
+        def load_user(user_id):
+            return User.query.get(int(user_id))
 
     # Configurações de logs
     if not app.debug:
