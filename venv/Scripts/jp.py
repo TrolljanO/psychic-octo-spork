@@ -1,4 +1,4 @@
-#!C:\Users\T_J\Desktop\psychic-octo-spork\venv\Scripts\python.exe
+#!C:\Users\T_J\PhpstormProjects\psychic-octo-spork\venv\Scripts\python.exe
 
 import sys
 import json

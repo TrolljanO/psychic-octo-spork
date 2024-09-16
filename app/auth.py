@@ -8,6 +8,13 @@ import re
 
 auth = Blueprint('auth', __name__)
 
+@auth.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
+
 # Rota de login (POST e OPTIONS)
 @auth.route('/login', methods=['POST', 'OPTIONS'])
 def login_post():

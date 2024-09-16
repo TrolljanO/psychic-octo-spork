@@ -6,7 +6,7 @@ from config import Config
 import pymysql
 import logging
 from logging.handlers import RotatingFileHandler
-from flask_cors import CORS  # Importação do CORS
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from .models import db
@@ -19,23 +19,27 @@ migrate = Migrate()
 login = LoginManager()
 login.login_view = 'auth.login'
 
-def create_app():
+def create_app(config_name=None):
     # Criar a aplicação Flask
     app = Flask(__name__)
-    app.config.from_object(Config)
-    db.init_app(app)
-    print(db)
+
+    # Configuração do aplicativo com base no nome da configuração
+    if config_name == 'testing':
+        app.config.from_object('config.TestingConfig')
+    else:
+        app.config.from_object(Config)
 
     # Configuração do banco de dados
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///:memory:')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ECHO'] = True
     app.config["SQLALCHEMY_RECORD_QUERIES"] = True
 
-    # Configuração de CORS para permitir requisições de http://localhost:3001
-    CORS(app, resources={r"/*": {"origins": "http://localhost:3001"}}, methods=["GET", "POST", "OPTIONS"])
+    # Configuração de CORS
+    CORS(app, resources={r"/*": {"origins": "*"}}, methods=["GET", "POST", "OPTIONS"])
 
     # Inicializar as extensões
+    db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
 
@@ -45,7 +49,7 @@ def create_app():
         from .limpa_nome_routes import limpa_nome_bp
         from .limpa_pasta_routes import limpa_pasta_bp
         from .auth import auth
-        from .models import User  # Certifique-se de importar User aqui
+        from .models import User
 
         app.register_blueprint(base_bp, url_prefix='/')
         app.register_blueprint(limpa_pasta_bp, url_prefix='/limpa_pasta')

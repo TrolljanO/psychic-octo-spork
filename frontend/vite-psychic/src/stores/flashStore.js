@@ -1,18 +1,20 @@
+// stores/flashStore.js
 import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
-export const useFlashStore = defineStore('flash', {
-    state: () => ({
-        message: null,  // Certifique-se de que 'message' está definido no estado inicial
-        type: null,     // Tipo de mensagem: 'success', 'error', etc.
-    }),
-    actions: {
-        setFlash(message, type = 'info') {
-            this.message = message;
-            this.type = type;
-        },
-        clearFlash() {
-            this.message = null;
-            this.type = null;
-        }
+export const useFlashStore = defineStore('flash', () => {
+    const message = ref('');
+    const type = ref('');
+
+    function setMessage({ message: msg, type: msgType }) {
+        message.value = msg;
+        type.value = msgType;
     }
+
+    function clearMessage() {
+        message.value = '';
+        type.value = '';
+    }
+
+    return { message, type, setMessage, clearMessage };
 });

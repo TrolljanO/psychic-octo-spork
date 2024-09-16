@@ -11,7 +11,7 @@
           type="password"
       ></v-text-field>
 
-      <v-btn @click="login">Entrar</v-btn>
+      <v-btn @click="handleLogin">Entrar</v-btn>
 
       <v-alert v-if="flashStore.message" :type="flashStore.type">
         {{ flashStore.message }}
@@ -24,21 +24,37 @@
 <script>
 import { ref } from 'vue';
 import { login } from '@/api/api';  // Importa a função de login
+import { useFlashStore } from '@/stores/flashStore';  // Store para mensagens
+import router from "@/router/index.js";  // Importa o roteador para redirecionamento
 
 export default {
   name: 'LoginForm',
   setup() {
     const email = ref('');
     const password = ref('');
+    const flashStore = useFlashStore();  // Usa o flashStore da Pinia
 
     const handleLogin = async () => {
       try {
+        // Chama a API de login e espera pela resposta
         const response = await login(email.value, password.value);
-        console.log(response);  // Sucesso no login
-        // Redirecionar para a página de serviços ou exibir mensagem de sucesso
+
+        if (response.message === "login efetuado com sucesso") {
+          // Define a mensagem flash
+          flashStore.setMessage({
+            message: 'Login efetuado com sucesso!',
+            type: 'success',
+          });
+
+          // Redireciona para a página /index
+          router.push('/index');
+        }
       } catch (error) {
-        console.error('Erro ao realizar o login:', error);
-        // Lidar com o erro de login
+        // Em caso de erro, mostra a mensagem de erro
+        flashStore.setMessage({
+          message: 'Erro no login. Verifique suas credenciais.',
+          type: 'error',
+        });
       }
     };
 
@@ -46,8 +62,8 @@ export default {
       email,
       password,
       handleLogin,
+      flashStore,
     };
-  },
+  }
 };
 </script>
-

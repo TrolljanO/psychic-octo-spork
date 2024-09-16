@@ -76,7 +76,7 @@ def run_migrations_online():
     """Run migrations in 'online' mode."""
 
     # Lista de tabelas que você quer ignorar nas migrações
-    exclude_tables = ['usuario_site', 'vendas_limpa_pasta', 'cliente', 'services', 'user']
+    exclude_tables = ['usuario_site', 'vendas_limpa_pasta', 'cliente']
 
     # Função para ignorar as tabelas listadas
     def include_object(object, name, type_, reflected, compare_to):

@@ -40,3 +40,10 @@ if Config.AWS_ACCESS_KEY_ID and Config.AWS_SECRET_ACCESS_KEY:
 else:
     s3 = None  # Não inicializar se não houver credenciais AWS
 
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DEBUG = False
+    WTF_CSRF_ENABLED = False  # Desabilitar CSRF em testes
+    SERVER_NAME = 'localhost'  # Definir um nome de servidor para os testes de rota
